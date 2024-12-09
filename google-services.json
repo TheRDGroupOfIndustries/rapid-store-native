@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "856045499212",
+    "project_id": "andreo-ae15f",
+    "storage_bucket": "andreo-ae15f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:856045499212:android:f9e6a131cd81b3f7afd5e9",
+        "android_client_info": {
+          "package_name": "com.adarsh930.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgGKNhiAPon6eEWbfUqQrFZJXVjYuM5X0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

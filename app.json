@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "my-app",
+    "name": "Rapid Store",
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo2.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,10 +13,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/iconi.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.adarsh930.myapp"
+      "package": "com.adarsh930.myapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
