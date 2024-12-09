@@ -1,10 +1,12 @@
 
 
-import { Text, View, BackHandler, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import { Text, View, BackHandler, Image, SafeAreaView, Pressable, StyleSheet, Linking  } from "react-native";
 import WebView from "react-native-webview";
 import * as Network from "expo-network";
 import { useEffect, useRef, useState } from "react";
 import registerNNPushToken from 'native-notify';
+
+import { openInAppBrowser } from "@/app/utils/InAppBrowser";
 
 export default function Index() {
   registerNNPushToken(25263, 'ID7qHXHFa3dZJEtRIvErJJ');
@@ -14,12 +16,13 @@ export default function Index() {
   const webViewRef = useRef<WebView>(null);
   const [canGoBack, setCanGoBack] = useState(false);
 
-  useEffect(() => {
-    const checkNetwork = async () => {
-      const networkStatus = await Network.getNetworkStateAsync();
-      setIsConnected(networkStatus.isConnected ?? false);
-    };
+  const checkNetwork = async () => {
+    const networkStatus = await Network.getNetworkStateAsync();
+    setIsConnected(networkStatus.isConnected ?? false);
+  };
 
+
+  useEffect(() => {
     checkNetwork();
   }, []);
 
@@ -37,7 +40,7 @@ export default function Index() {
       backAction
     );
 
-    return () => backHandler.remove(); // Cleanup on component unmount
+    return () => backHandler.remove();
   }, [canGoBack]);
 
   useEffect(() => {
@@ -45,12 +48,19 @@ export default function Index() {
       setSplash(false);
     }, 2000);
 
-    return () => clearTimeout(splashTimeout); // Cleanup timeout on component unmount
+    return () => clearTimeout(splashTimeout);
   }, []);
 
-  const handleTryAgain = () => {
-    console.log("reload");
-  };
+  useEffect(() => {
+    const handleURL = (event: { url: string }) => {
+      openInAppBrowser(event.url);
+    };
+    const listner = Linking.addListener("url", handleURL);
+    return () => {
+      listner.remove();
+    };
+  }, []);
+
 
   return (
     <SafeAreaView
@@ -69,56 +79,47 @@ export default function Index() {
       ) : isConnected ? (
         <WebView
           ref={webViewRef}
-          source={{ uri: "https://www.therapidstore.online/" }}
+          source={{ uri: "https://www.therapidstore.online" }}
           onNavigationStateChange={(navState: any) => setCanGoBack(navState.canGoBack)}
         />
       ) : (
         <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#ffffff",
-          }}
-        >
-          <View
-            style={{
-              maxWidth: 400,
-              padding: 10,
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={require("@/assets/images/noi.png")}
-              style={{
-                width: 300,
-                height: 200,
-                resizeMode: "contain",
-              }}
-            />
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#28a745",
-                paddingVertical: 10,
-                paddingHorizontal: 20,
-                marginTop: 20,
-                borderRadius: 5,
-              }}
-              onPress={handleTryAgain}
-            >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontSize: 16,
-                  textAlign: "center",
-                }}
-              >
-                Try again
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "80%",
+          flexDirection: "column",
+        }}
+      >
+       <Image source={require("@/assets/images/no_internet.png")} style={{width: '100%', height: "40%", objectFit: 'contain'}}/>
+       <Pressable style={styles.button} onPress={() => checkNetwork()}>
+         <Text style={styles.text}>Try Again</Text>
+       </Pressable> 
+      </View>
       )}
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    elevation: 3,
+    backgroundColor: 'green',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },
+});
+
+
